@@ -52,7 +52,8 @@ async function updateSingleUser(id, body) {
 
     const user = await users.updateUser(id, filterData);
     if (!user) throw { code: 404, msg: "user not found" };
-    return user;
+    const updatedUser = await getUserByID(user._id, {});
+    return updatedUser;
 }
 
 

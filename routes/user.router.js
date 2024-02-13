@@ -46,8 +46,8 @@ router.put('/:id', auth.verifyToken, async (req, res) => {
     try {
         const userId = req.params.id;
         if (req.body.user.premission == "admin" || req.body.user.userId == userId) {
-            await service.updateSingleUser(userId, req.body);
-            res.send("The user has been updated")
+            let user = await service.updateSingleUser(userId, req.body);
+            res.send(user)
         } else {
             // אם זה לא המשתמש עצמו או האדמין שמנסה לעדכן נזרקת שגיאה
             res.status(403).send("Forbidden: You do not have permission to update this user");

@@ -71,8 +71,10 @@ router.post('/', async (req, res) => {
 router.delete('/:id', auth.verifyToken, async (req, res) => {
     try {
         const userId = req.params.id;
+        const password = req.body.password;
+        // console.log("userId: " + userId, "password: " + password)
         if (req.body.user.premission == "admin" || req.body.user.userId == userId) {
-            let user = await service.deleteSingleUser(userId);
+            let user = await service.deleteSingleUser(userId, password);
             res.send(user);
         } else {
             // אם זה לא המשתמש עצמו או האדמין שמנסה למחוק נזרקת שגיאה

@@ -86,12 +86,16 @@ async function addUser(body) {
 
 
 // מחיקת משתמש על פי ID
-async function deleteSingleUser(id) {
-    // idבדיקה ל
-    if (!mongoose.Types.ObjectId.isValid(id)) throw "id not valid"
-
-    const user = await users.deleteUser(id);
+async function deleteSingleUser(id, password) {
+    // מציאת היוזר
+    const user = await getUserByID(id, {});
     if (!user) throw { code: 404, msg: "User to delete not found" };
+
+    // בדיקת הסיסמה
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) throw { code: 401, msg: "Invalid password" };
+
+    await users.deleteUser(id);
     return user;
 }
 

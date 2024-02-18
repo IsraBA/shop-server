@@ -68,7 +68,7 @@ router.post('/', async (req, res) => {
 })
 
 // מחיקת משתמש
-router.delete('/:id', auth.verifyToken, async (req, res) => {
+router.put('/delete/:id', auth.verifyToken, async (req, res) => {
     try {
         const userId = req.params.id;
         const password = req.body.password;

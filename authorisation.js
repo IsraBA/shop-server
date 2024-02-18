@@ -18,7 +18,7 @@ async function login(body) {
     const data = { email, password, premission: user.premission, userId: user._id }
 
     // יצירת טוקן למשתמש
-    const token = jwt.sign(data, SECRET, { expiresIn: "1d" })
+    const token = jwt.sign(data, SECRET, { expiresIn: "7d" })
     return token;
 }
 

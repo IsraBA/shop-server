@@ -2,6 +2,9 @@ const orderModel = require('../models/order.model');
 
 const read = async (filter = {}, options = {}) => {
     let query = orderModel.find(filter);
+    query.populate({
+        path: 'userId'
+    })
     if (options.populateItems) {
         query.populate({
             path: 'items.itemId'
@@ -11,7 +14,9 @@ const read = async (filter = {}, options = {}) => {
 }
 
 const readOne = async (filter) => {
-    return await orderModel.findOne(filter).populate('items.itemId');
+    let query = orderModel.findOne(filter);
+    query.populate('userId').populate('items.itemId');
+    return await query.exec();
 }
 
 const create = async (data) => {

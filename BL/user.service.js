@@ -19,7 +19,7 @@ async function getUserByID(id, options) {
 
 // הצגת משתמש על פי אימייל
 async function getUserByemail(email) {
-    return await users.getUser({ email });
+    return await users.getUser({ email, isActive: true });
 }
 
 
@@ -61,7 +61,7 @@ async function updateSingleUser(id, body) {
 async function addUser(body) {
     // בדיקה שהאימייל לא בשימוש כבר במערכת
     const { email } = body;
-    const existingUser = await users.getUser({ email });
+    const existingUser = await users.getUser({ email, isActive: true });
     if (existingUser) {
         throw "Email already exists in the system"
     }

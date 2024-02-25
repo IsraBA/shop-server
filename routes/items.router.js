@@ -49,8 +49,8 @@ router.get('/singleItem/:id', async (req, res) => {
 // עדכון מוצר
 router.put('/:id', auth.verifyToken, auth.verifyTokenAdmin, async (req, res) => {
     try {
-        await service.updateSingleItem(req.params.id, req.body);
-        res.send("The item has been updated")
+        let item = await service.updateSingleItem(req.params.id, req.body);
+        res.send(item)
     } catch (error) {
         res.status(error?.code || 500).send(error.msg || error || "something went wrong");
     }

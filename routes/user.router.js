@@ -21,10 +21,29 @@ router.get('/', auth.verifyToken, auth.verifyTokenAdmin, async (req, res) => {
     }
 })
 
-// ID הצגת משתמש על פי
+// הצגת משתמש על פי טוקן
 router.get('/user', auth.verifyToken, async (req, res) => {
     try {
         const userId = req.body.user.userId;
+        if (req.body.user.premission == "admin" || userId) {
+            const { populateOrders, populateItems } = req.query;
+            let singleUser = await service.getUserByID(userId, {
+                populateOrders: populateOrders && JSON.parse(populateOrders),
+                populateItems: populateItems && JSON.parse(populateItems),
+            });
+            res.send(singleUser);
+        } else {
+            // אם זה לא המשתמש עצמו או האדמין שמנסה להציג נזרקת שגיאה
+            res.status(403).send("Forbidden: You do not have permission to see this user");
+        }
+    } catch (error) {
+        res.status(error?.code || 500).send(error.msg || error || "something went wrong");;
+    }
+})
+// ID הצגת משתמש על פי 
+router.get('/user/:id', auth.verifyToken, async (req, res) => {
+    try {
+        const userId = req.params.id;
         if (req.body.user.premission == "admin" || req.body.user.userId == userId) {
             const { populateOrders, populateItems } = req.query;
             let singleUser = await service.getUserByID(userId, {

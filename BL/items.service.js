@@ -125,18 +125,18 @@ async function updateSingleItem(id, body) {
     const { name } = body;
     const existingName = await items.getItem({ name });
     if (existingName && existingName._id.toString() !== id) {
-        throw "Item name already exists in the system"
+        throw "שם המוצר כבר קיים במערכת"
     }
     // בדיקה שברקוד המוצר לא בשימוש כבר במערכת
     const { barcode } = body;
     const existingBarcode = await items.getItem({ barcode });
     if (existingBarcode && existingBarcode._id.toString() !== id) {
-        throw "Item barcode already exists in the system"
+        throw "הברקוד כבר בשימוש במערכת"
     }
 
     // בדיקה שהמחיר מעל 0
     const { price } = body;
-    if (price <= 0) throw "Item price must be greater than 0"
+    if (price <= 0) throw "מחיר המוצר חייב להיות גדול מאפס"
 
     // חילוץ השדות הרלוונטים מהבאדי
     const { category, image } = body;
@@ -146,9 +146,10 @@ async function updateSingleItem(id, body) {
         return value !== undefined && value !== null && value !== '';
     }));
 
-    const item = await items.updateItem(id, filterData);
-    console.log(item);
-    if (!item) throw { code: 404, msg: "Item not to update found" }
+    const itemToUpdate = await items.updateItem(id, filterData);
+    if (!itemToUpdate) throw { code: 404, msg: "לא נמצא מוצר לעדכן" }
+    const item = await getItemByID(id);
+    // console.log(item);
     return item;
 }
 
